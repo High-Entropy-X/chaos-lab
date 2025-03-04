@@ -6,7 +6,8 @@ body {
     font-family: Arial, sans-serif;
     background-color: #1e1e2f;
     color: #fff;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, color 0.3s;
+    overflow-x: hidden;
 }
 
 /* Header */
@@ -15,16 +16,21 @@ body {
     padding: 2rem;
     background-color: #28293d;
     border-bottom: 2px solid #444;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
 .header h1 {
     margin: 0;
     font-size: 3rem;
+    color: #ff5e57;
 }
 
 .header p {
     font-size: 1.2rem;
     margin: 0.5rem 0;
+    color: #ccc;
 }
 
 /* Main Content */
@@ -32,9 +38,12 @@ body {
     padding: 2rem;
 }
 
+/* Section Titles */
 .section h2 {
     text-align: center;
     margin-bottom: 2rem;
+    font-size: 2.5rem;
+    color: #ff5e57;
 }
 
 /* Cards */
@@ -51,19 +60,26 @@ body {
     text-decoration: none;
     color: #fff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s;
 }
 
 .card:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    background-color: #444;
 }
 
 .card h3 {
     margin-top: 0;
+    color: #ff5e57;
 }
 
-/* Button */
+.card p {
+    color: #ddd;
+    font-size: 0.9rem;
+}
+
+/* Random Button */
 .btn-random {
     padding: 10px 20px;
     font-size: 1.2rem;
@@ -73,11 +89,80 @@ body {
     color: white;
     cursor: pointer;
     margin-top: 1rem;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, transform 0.2s;
 }
 
 .btn-random:hover {
     background-color: #ff1e1e;
+    transform: scale(1.05);
+}
+
+/* Flash Games Section */
+.flash-games-section {
+    margin-top: 2rem;
+    padding: 1rem;
+    background-color: #28293d;
+    border-radius: 10px;
+    border: 1px solid #444;
+}
+
+.flash-games-container {
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 10px;
+    margin-bottom: 1rem;
+}
+
+.flash-games-scroll {
+    display: flex;
+    gap: 1rem;
+}
+
+.flash-card {
+    display: inline-block;
+    width: 200px;
+    min-height: 150px;
+    padding: 1rem;
+    background-color: #333;
+    color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    white-space: normal;
+    transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s;
+}
+
+.flash-card:hover {
+    transform: scale(1.1);
+    background-color: #444;
+}
+
+.flash-card h3 {
+    margin-top: 0;
+    color: #ff5e57;
+}
+
+.flash-card p {
+    font-size: 0.9rem;
+    color: #ddd;
+}
+
+/* See More Button */
+.btn-see-more {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    background-color: #ff5e57;
+    color: white;
+    text-decoration: none;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-see-more:hover {
+    background-color: #ff1e1e;
+    transform: scale(1.05);
 }
 
 /* Footer */
@@ -86,9 +171,47 @@ body {
     padding: 1rem;
     text-align: center;
     border-top: 2px solid #444;
+    color: #aaa;
 }
 
 /* Fun Background Colors */
 body.fun-bg {
     background-color: #ff007f;
+    color: #fff;
+    transition: background-color 0.5s;
+}
+
+/* Scrollbar Customization */
+.flash-games-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.flash-games-container::-webkit-scrollbar-thumb {
+    background: #ff5e57;
+    border-radius: 10px;
+}
+
+.flash-games-container::-webkit-scrollbar-thumb:hover {
+    background: #ff1e1e;
+}
+
+/* Smooth Scrolling */
+.flash-games-container {
+    scroll-behavior: smooth;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2.5rem;
+    }
+    
+    .btn-random, .btn-see-more {
+        font-size: 1rem;
+        padding: 8px 16px;
+    }
+    
+    .flash-card, .card {
+        min-width: 150px;
+    }
 }

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Click Mania</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1e1e2f;
+            color: white;
+            text-align: center;
+            padding-top: 50px;
+        }
+        h1 {
+            color: #ff5e57;
+        }
+        .btn-click {
+            padding: 20px;
+            font-size: 2rem;
+            border: none;
+            background-color: #ff5e57;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .score {
+            font-size: 1.5rem;
+            margin-top: 20px;
+        }
+        a {
+            color: #ff5e57;
+            text-decoration: none;
+            margin-top: 20px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <h1>Click Mania</h1>
+    <p>Click the button as many times as you can in 10 seconds!</p>
+    <button class="btn-click" onclick="clickButton()">Click Me!</button>
+    <p class="score" id="score">Score: 0</p>
+    <p id="timer">Time Left: 10s</p>
+    <a href="../../index.html">Back to Chaos Lab</a>
+
+    <script>
+        let score = 0;
+        let timeLeft = 10;
+        let timer;
+        let isGameActive = false;
+
+        function clickButton() {
+            if (!isGameActive) {
+                startGame();
+            }
+            score++;
+            document.getElementById('score').textContent = "Score: " + score;
+        }
+
+        function startGame() {
+            isGameActive = true;
+            score = 0;
+            timeLeft = 10;
+            document.getElementById('score').textContent = "Score: 0";
+            document.getElementById('timer').textContent = "Time Left: 10s";
+
+            timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer').textContent = "Time Left: " + timeLeft + "s";
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    alert("Time's up! Your score is: " + score);
+                    isGameActive = false;
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
