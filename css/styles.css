@@ -1,0 +1,94 @@
+/* Global Styles */
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    background-color: #1e1e2f;
+    color: #fff;
+    transition: background-color 0.3s;
+}
+
+/* Header */
+.header {
+    text-align: center;
+    padding: 2rem;
+    background-color: #28293d;
+    border-bottom: 2px solid #444;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 3rem;
+}
+
+.header p {
+    font-size: 1.2rem;
+    margin: 0.5rem 0;
+}
+
+/* Main Content */
+.main-content {
+    padding: 2rem;
+}
+
+.section h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+/* Cards */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.card {
+    background-color: #333;
+    padding: 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.card h3 {
+    margin-top: 0;
+}
+
+/* Button */
+.btn-random {
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 5px;
+    background-color: #ff5e57;
+    color: white;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: background-color 0.3s;
+}
+
+.btn-random:hover {
+    background-color: #ff1e1e;
+}
+
+/* Footer */
+.footer {
+    background-color: #28293d;
+    padding: 1rem;
+    text-align: center;
+    border-top: 2px solid #444;
+}
+
+/* Fun Background Colors */
+body.fun-bg {
+    background-color: #ff007f;
+}
