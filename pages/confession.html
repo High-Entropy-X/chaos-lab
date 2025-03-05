@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Confessions - Chaos Lab</title>
+  <link rel="stylesheet" href="../css/global.css" />
+  <link rel="stylesheet" href="../css/confession.css" />
+</head>
+<body data-theme="light">
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-content">
+      <div class="header-title">
+        <h1>Confessions</h1>
+      </div>
+      <label class="theme-toggle" id="theme-toggle">
+        <input type="checkbox" />
+        <span class="slider"></span>
+      </label>
+    </div>
+  </header>
+
+  <!-- CONFESSION INTRODUCTION -->
+  <section class="confession-intro">
+    <p>
+      This page is for your confessions – we read your pain and achievements,
+      and your words stay private with us. Feel free to add anything you'd like
+      to share. Remember: keep it private, not secret.
+    </p>
+  </section>
+
+  <!-- CONFESSION FORM -->
+  <section class="confession-form">
+    <form id="confessionForm">
+      <textarea
+        id="confessionInput"
+        placeholder="Write your confession here..."
+        required
+      ></textarea>
+      <button type="submit">Submit Confession</button>
+    </form>
+  </section>
+
+  <!-- CONFESSIONS DISPLAY -->
+  <section class="confessions-display" id="confessionsDisplay">
+    <!-- Confession boxes will be loaded here -->
+  </section>
+
+  <!-- Firebase and Confessions Integration -->
+  <script type="module">
+    // Import Firebase modules from CDN
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-analytics.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      serverTimestamp,
+      query,
+      orderBy,
+      getDocs
+    } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+
+    // Your Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyDAbhzsLwV_EPT8bGo3YDwEmSGh52F9W_Y",
+      authDomain: "chaoslabconfessions.firebaseapp.com",
+      projectId: "chaoslabconfessions",
+      storageBucket: "chaoslabconfessions.firebasestorage.app",
+      messagingSenderId: "460774692827",
+      appId: "1:460774692827:web:6637b432357a43b192f9fe",
+      measurementId: "G-QYQLCT8H27"
+    };
+
+    // Initialize Firebase and Firestore
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const db = getFirestore(app);
+
+    // List of random emojis for each confession
+    const emojiList = [
+      "😢", "😄", "😎", "🤔", "💔", "✨", "🔥", "🌈", "💫", "😊",
+      "🤩", "😇", "😜", "🙃", "🤗", "😌", "😱", "😴", "😆", "🫣"
+    ];
+
+    // List of fun gradients for background
+    const gradientList = [
+      "linear-gradient(135deg, #FF5E57, #FF9966)",
+      "linear-gradient(135deg, #5EF7FF, #6699FF)",
+      "linear-gradient(135deg, #f093fb, #f5576c)",
+      "linear-gradient(135deg, #c3ec52, #0ba29d)",
+      "linear-gradient(135deg, #ffafbd, #ffc3a0)",
+      "linear-gradient(135deg, #fcff9e, #c67700)",
+      "linear-gradient(135deg, #a1c4fd, #c2e9fb)",
+      "linear-gradient(135deg, #ffecd2, #fcb69f)"
+    ];
+
+    // Dynamically calculate width based on confession length
+    // Longer text => bigger width. Adjust factor, minWidth, maxWidth to taste.
+    function calculateBoxWidth(text) {
+      const length = text.length;
+      const factor = 6;      // increase or decrease to adjust how quickly width grows
+      const minWidth = 150;  // minimum box width
+      const maxWidth = 450;  // maximum box width
+      let width = minWidth + length * factor;
+      if (width > maxWidth) width = maxWidth;
+      return width;
+    }
+
+    // Function to display confessions
+    function displayConfessions(confessions) {
+      const container = document.getElementById("confessionsDisplay");
+      container.innerHTML = "";
+      confessions.forEach((confession) => {
+        // Create a box element
+        const box = document.createElement("div");
+
+        // Calculate dynamic width from text length
+        const dynamicWidth = calculateBoxWidth(confession);
+        box.style.width = `${dynamicWidth}px`;
+
+        // Let height be auto so we can see all text
+        box.style.height = "auto";
+
+        // Pick a random emoji
+        const randomEmoji =
+          emojiList[Math.floor(Math.random() * emojiList.length)];
+
+        // Pick a random gradient
+        const randomGradient =
+          gradientList[Math.floor(Math.random() * gradientList.length)];
+
+        // Apply styles
+        box.className = "confession-box";
+        box.style.background = randomGradient;
+
+        // Show the emoji + confession text
+        box.innerHTML = `<span class="confession-emoji">${randomEmoji}</span> ${confession}`;
+
+        container.appendChild(box);
+      });
+    }
+
+    // Function to load confessions from Firestore
+    async function loadConfessions() {
+      try {
+        const q = query(
+          collection(db, "confessions"),
+          orderBy("timestamp", "desc")
+        );
+        const querySnapshot = await getDocs(q);
+        let confessions = [];
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          if (data.text) {
+            confessions.push(data.text);
+          }
+        });
+        displayConfessions(confessions);
+      } catch (error) {
+        console.error("Error loading confessions:", error);
+      }
+    }
+
+    // Function to submit a confession
+    async function submitConfession(confessionText) {
+      try {
+        // Replace newlines with spaces so the confession is stored as one line
+        const sanitizedText = confessionText.replace(/\n/g, " ");
+        await addDoc(collection(db, "confessions"), {
+          text: sanitizedText,
+          timestamp: serverTimestamp()
+        });
+        console.log("Confession submitted!");
+      } catch (error) {
+        console.error("Error submitting confession:", error);
+      }
+    }
+
+    // Handle confession form submission
+    document
+      .getElementById("confessionForm")
+      .addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const confessionInput = document.getElementById("confessionInput");
+        const confessionText = confessionInput.value.trim();
+        if (confessionText === "") return;
+        await submitConfession(confessionText);
+        confessionInput.value = "";
+        loadConfessions();
+      });
+
+    // Theme toggle functionality
+    const themeToggle = document.getElementById("theme-toggle");
+    const body = document.body;
+
+    // If the checkbox is checked, switch to dark theme
+    themeToggle.addEventListener("change", (e) => {
+      if (e.target.checked) {
+        body.setAttribute("data-theme", "dark");
+      } else {
+        body.setAttribute("data-theme", "light");
+      }
+    });
+
+    // Load confessions when the page loads
+    loadConfessions();
+  </script>
+</body>
+</html>

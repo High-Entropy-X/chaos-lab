@@ -1,0 +1,46 @@
+/* Global Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Global Fonts & Colors */
+  :root {
+    --bg-color-light: #f7f7f7;
+    --text-color-light: #333;
+    --header-bg-light: #fff;
+    --footer-bg-light: #f1f1f1;
+  
+    --bg-color-dark: #1e1e2f;
+    --text-color-dark: #fff;
+    --header-bg-dark: #28293d;
+    --footer-bg-dark: #28293d;
+  
+    --accent-color: #ff5e57;
+    --font-family: 'Arial', sans-serif;
+  }
+  
+  /* Set theme colors based on data-theme attribute */
+  body[data-theme="light"] {
+    --bg-color: var(--bg-color-light);
+    --text-color: var(--text-color-light);
+    --header-bg: var(--header-bg-light);
+    --footer-bg: var(--footer-bg-light);
+  }
+  
+  body[data-theme="dark"] {
+    --bg-color: var(--bg-color-dark);
+    --text-color: var(--text-color-dark);
+    --header-bg: var(--header-bg-dark);
+    --footer-bg: var(--footer-bg-dark);
+  }
+  
+  /* Global Styles */
+  body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-family);
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
