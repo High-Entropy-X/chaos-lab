@@ -14,7 +14,11 @@
       <div class="header-title">
         <h1>Welcome to Chaos Lab</h1>
       </div>
-      <button id="theme-toggle" title="Toggle Dark/Light Theme">🌙</button>
+      <!-- Theme toggle styled as a switch -->
+      <label class="theme-toggle" id="theme-toggle">
+        <input type="checkbox">
+        <span class="slider"></span>
+      </label>
     </div>
   </header>
   
@@ -70,6 +74,13 @@
     </div>
   </section>
 
+  <!-- On This Day in History Widget -->
+  <aside class="today-history-widget">
+    <h3>On This Day in History</h3>
+    <div id="historyEvent">Loading...</div>
+    <button id="reloadHistory" class="btn-reload">Reload</button>
+  </aside>
+  
   <!-- CONFESSION SHOWCASE SECTION -->
   <section class="confession-showcase">
     <h2>💬 Confessions</h2>
@@ -77,19 +88,51 @@
     <a href="pages/confession.html" class="btn-confess">Confess Now</a>
   </section>
 
-  <!-- THEME TOGGLE SCRIPT -->
+  <!-- Guess the Future Section -->
+  <section class="extra-section">
+    <h2>Want to know what the future holds?</h2>
+    <a href="pages/quiz.html" class="btn-quiz">Guess Your Future</a>
+  </section>
+  
+  <!-- Quiz Preview Section -->
+  <section class="quiz-preview-section">
+    <h2>Preview: Guess Your Future</h2>
+    <div class="iframe-container">
+      <iframe src="pages/quiz.html" title="Quiz Preview"></iframe>
+    </div>
+    <a href="pages/quiz.html" class="btn-quiz">Take the Full Quiz</a>
+  </section>
+
+  <!-- SCRIPTS -->
   <script>
-    const themeToggle = document.getElementById('theme-toggle');
-    const body = document.body;
-    themeToggle.addEventListener('click', () => {
-      if (body.getAttribute('data-theme') === 'light') {
-        body.setAttribute('data-theme', 'dark');
-        themeToggle.textContent = '☀️';
-      } else {
-        body.setAttribute('data-theme', 'light');
-        themeToggle.textContent = '🌙';
-      }
+    // Theme toggle functionality using the switch style
+    const themeToggleInput = document.querySelector("#theme-toggle input");
+    themeToggleInput.addEventListener("change", function() {
+      document.body.setAttribute("data-theme", this.checked ? "dark" : "light");
     });
+
+    // Fetch "On This Day in History" data and update widget
+    async function fetchTodayInHistory() {
+      try {
+        const response = await fetch("https://history.muffinlabs.com/date");
+        const data = await response.json();
+        const events = data.data.Events;
+        if (events && events.length > 0) {
+          const randomEvent = events[Math.floor(Math.random() * events.length)];
+          document.getElementById("historyEvent").innerHTML =
+            `<strong>${randomEvent.year}</strong>: ${randomEvent.text}`;
+        } else {
+          document.getElementById("historyEvent").textContent = "No events found for today.";
+        }
+      } catch (error) {
+        document.getElementById("historyEvent").textContent = "Failed to fetch events.";
+        console.error("Error fetching today in history:", error);
+      }
+    }
+    fetchTodayInHistory();
+
+    // Reload button for history widget
+    document.getElementById("reloadHistory").addEventListener("click", fetchTodayInHistory);
   </script>
 </body>
 </html>

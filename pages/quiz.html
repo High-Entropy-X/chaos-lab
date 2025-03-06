@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Guess Your Future - Chaos Lab</title>
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/quiz.css">
+</head>
+<body data-theme="light">
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-content">
+      <div class="header-title">
+        <h1>Guess Your Future</h1>
+      </div>
+      <label class="theme-toggle" id="theme-toggle">
+        <input type="checkbox">
+        <span class="slider"></span>
+      </label>
+    </div>
+  </header>
+
+  <!-- QUIZ INTRODUCTION -->
+  <section class="quiz-intro">
+    <p>
+      Welcome to the future quiz! Answer 10 randomly selected questions from our pool of 60 questions – covering your spiritual, logical, and emotional sides. Based on your answers, we’ll reveal a unique insight into your future.
+    </p>
+  </section>
+
+  <!-- QUIZ FORM -->
+  <section class="quiz-form-section">
+    <form id="quizForm">
+      <div id="questionsContainer"></div>
+      <button type="submit">Submit Answers</button>
+    </form>
+  </section>
+
+  <!-- QUIZ RESULT -->
+  <section class="quiz-result" id="quizResult" style="display:none;">
+    <h2>Your Future Insight</h2>
+    <p id="resultText"></p>
+    <button id="restartBtn">Take Quiz Again</button>
+  </section>
+
+  <script type="module">
+    /***********************
+     * Quiz Dataset
+     ***********************/
+    // The dataset contains 60 questions (20 spiritual, 20 logical, 20 emotional)
+    const questionsDataset = [
+      // Spiritual Questions (1–20)
+      {
+        question: "Do you feel connected to a higher power?",
+        options: [
+          { text: "Yes, deeply", score: { spiritual: 3, logical: 0, emotional: 0 } },
+          { text: "Somewhat", score: { spiritual: 2, logical: 1, emotional: 0 } },
+          { text: "Not sure", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Not at all", score: { spiritual: 0, logical: 2, emotional: 1 } }
+        ]
+      },
+      {
+        question: "How often do you meditate or pray?",
+        options: [
+          { text: "Daily", score: { spiritual: 3, logical: 0, emotional: 0 } },
+          { text: "Weekly", score: { spiritual: 2, logical: 1, emotional: 0 } },
+          { text: "Occasionally", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Never", score: { spiritual: 0, logical: 2, emotional: 1 } }
+        ]
+      },
+      {
+        question: "Do you believe that destiny is predetermined?",
+        options: [
+          { text: "Absolutely", score: { spiritual: 3, logical: 0, emotional: 0 } },
+          { text: "Probably", score: { spiritual: 2, logical: 1, emotional: 0 } },
+          { text: "Not sure", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "I believe in free will", score: { spiritual: 0, logical: 2, emotional: 1 } }
+        ]
+      },
+      {
+        question: "How important is inner peace to you?",
+        options: [
+          { text: "Extremely", score: { spiritual: 3, logical: 0, emotional: 0 } },
+          { text: "Moderately", score: { spiritual: 2, logical: 1, emotional: 0 } },
+          { text: "Somewhat", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Not important", score: { spiritual: 0, logical: 2, emotional: 1 } }
+        ]
+      },
+      {
+        question: "Do you feel the universe communicates with you?",
+        options: [
+          { text: "Yes, frequently", score: { spiritual: 3, logical: 0, emotional: 0 } },
+          { text: "Sometimes", score: { spiritual: 2, logical: 1, emotional: 0 } },
+          { text: "Rarely", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Never", score: { spiritual: 0, logical: 2, emotional: 1 } }
+        ]
+      },
+      {
+        question: "Do you believe in soulmates and spiritual connections?",
+        options: [
+          { text: "Absolutely", score: { spiritual: 3, logical: 0, emotional: 0 } },
+          { text: "I think so", score: { spiritual: 2, logical: 1, emotional: 0 } },
+          { text: "Not sure", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "No, not really", score: { spiritual: 0, logical: 2, emotional: 1 } }
+        ]
+      },
+      {
+        question: "How often do you reflect on your life's purpose?",
+        options: [
+          { text: "Daily", score: { spiritual: 3, logical: 0, emotional: 0 } },
+          { text: "Weekly", score: { spiritual: 2, logical: 1, emotional: 0 } },
+          { text: "Occasionally", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Never", score: { spiritual: 0, logical: 2, emotional: 1 } }
+        ]
+      },
+      {
+        question: "Do you believe in past lives?",
+        options: [
+          { text: "Yes, strongly", score: { spiritual: 3, logical: 0, emotional: 0 } },
+          { text: "Maybe", score: { spiritual: 2, logical: 1, emotional: 0 } },
+          { text: "Not sure", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "No", score: { spiritual: 0, logical: 2, emotional: 1 } }
+        ]
+      },
+      {
+        question: "How much do you trust your intuition?",
+        options: [
+          { text: "I trust it completely", score: { spiritual: 3, logical: 0, emotional: 0 } },
+          { text: "I trust it often", score: { spiritual: 2, logical: 1, emotional: 0 } },
+          { text: "Sometimes", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "I rely on logic more", score: { spiritual: 0, logical: 2, emotional: 1 } }
+        ]
+      },
+      {
+        question: "Do you feel nature has a healing power?",
+        options: [
+          { text: "Absolutely", score: { spiritual: 3, logical: 0, emotional: 0 } },
+          { text: "Somewhat", score: { spiritual: 2, logical: 1, emotional: 0 } },
+          { text: "Not sure", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Not really", score: { spiritual: 0, logical: 2, emotional: 1 } }
+        ]
+      },
+      {
+        question: "Are you open to spiritual experiences?",
+        options: [
+          { text: "Very open", score: { spiritual: 3, logical: 0, emotional: 0 } },
+          { text: "Somewhat open", score: { spiritual: 2, logical: 1, emotional: 0 } },
+          { text: "Neutral", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Not open", score: { spiritual: 0, logical: 2, emotional: 1 } }
+        ]
+      },
+      {
+        question: "Do you believe in the power of positive energy?",
+        options: [
+          { text: "Yes, completely", score: { spiritual: 3, logical: 0, emotional: 0 } },
+          { text: "Somewhat", score: { spiritual: 2, logical: 1, emotional: 0 } },
+          { text: "Not sure", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "No", score: { spiritual: 0, logical: 2, emotional: 1 } }
+        ]
+      },
+      {
+        question: "How important is gratitude in your life?",
+        options: [
+          { text: "Extremely important", score: { spiritual: 3, logical: 0, emotional: 0 } },
+          { text: "Important", score: { spiritual: 2, logical: 1, emotional: 0 } },
+          { text: "Somewhat important", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Not important", score: { spiritual: 0, logical: 2, emotional: 1 } }
+        ]
+      },
+      {
+        question: "Do you engage in practices like yoga or meditation?",
+        options: [
+          { text: "Regularly", score: { spiritual: 3, logical: 0, emotional: 0 } },
+          { text: "Occasionally", score: { spiritual: 2, logical: 1, emotional: 0 } },
+          { text: "Rarely", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Never", score: { spiritual: 0, logical: 2, emotional: 1 } }
+        ]
+      },
+      {
+        question: "Do you feel a sense of oneness with others?",
+        options: [
+          { text: "Strongly", score: { spiritual: 3, logical: 0, emotional: 0 } },
+          { text: "Somewhat", score: { spiritual: 2, logical: 1, emotional: 0 } },
+          { text: "Neutral", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Not at all", score: { spiritual: 0, logical: 2, emotional: 1 } }
+        ]
+      },
+      {
+        question: "Do you follow any spiritual teachings?",
+        options: [
+          { text: "Yes, religious or spiritual texts", score: { spiritual: 3, logical: 0, emotional: 0 } },
+          { text: "Some guidance", score: { spiritual: 2, logical: 1, emotional: 0 } },
+          { text: "Not really", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "No", score: { spiritual: 0, logical: 2, emotional: 1 } }
+        ]
+      },
+      {
+        question: "How do you perceive synchronicity in life?",
+        options: [
+          { text: "I see it everywhere", score: { spiritual: 3, logical: 0, emotional: 0 } },
+          { text: "Occasionally notice it", score: { spiritual: 2, logical: 1, emotional: 0 } },
+          { text: "Not sure", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "I don't believe in it", score: { spiritual: 0, logical: 2, emotional: 1 } }
+        ]
+      },
+      {
+        question: "Do you believe in the law of attraction?",
+        options: [
+          { text: "Absolutely", score: { spiritual: 3, logical: 0, emotional: 0 } },
+          { text: "To some extent", score: { spiritual: 2, logical: 1, emotional: 0 } },
+          { text: "I'm not sure", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "No, not really", score: { spiritual: 0, logical: 2, emotional: 1 } }
+        ]
+      },
+      {
+        question: "How often do you experience moments of clarity?",
+        options: [
+          { text: "Very often", score: { spiritual: 3, logical: 0, emotional: 0 } },
+          { text: "Sometimes", score: { spiritual: 2, logical: 1, emotional: 0 } },
+          { text: "Rarely", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Never", score: { spiritual: 0, logical: 2, emotional: 1 } }
+        ]
+      },
+      {
+        question: "Do you feel the presence of guardian angels?",
+        options: [
+          { text: "Yes, clearly", score: { spiritual: 3, logical: 0, emotional: 0 } },
+          { text: "I sense it sometimes", score: { spiritual: 2, logical: 1, emotional: 0 } },
+          { text: "Not sure", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "No", score: { spiritual: 0, logical: 2, emotional: 1 } }
+        ]
+      },
+      // Logical Questions (21–40)
+      {
+        question: "Do you enjoy solving puzzles and challenges?",
+        options: [
+          { text: "Absolutely", score: { spiritual: 0, logical: 3, emotional: 0 } },
+          { text: "Often", score: { spiritual: 1, logical: 2, emotional: 0 } },
+          { text: "Sometimes", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Rarely", score: { spiritual: 2, logical: 0, emotional: 1 } }
+        ]
+      },
+      {
+        question: "How do you approach decision making?",
+        options: [
+          { text: "Analytically", score: { spiritual: 0, logical: 3, emotional: 0 } },
+          { text: "Intuitively", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Balanced", score: { spiritual: 1, logical: 2, emotional: 0 } },
+          { text: "Impulsively", score: { spiritual: 2, logical: 0, emotional: 1 } }
+        ]
+      },
+      {
+        question: "Do you value rational thinking over emotions?",
+        options: [
+          { text: "Strongly", score: { spiritual: 0, logical: 3, emotional: 0 } },
+          { text: "Somewhat", score: { spiritual: 1, logical: 2, emotional: 0 } },
+          { text: "Neutral", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Not really", score: { spiritual: 2, logical: 0, emotional: 1 } }
+        ]
+      },
+      {
+        question: "When faced with a problem, do you rely on logic or creativity?",
+        options: [
+          { text: "Logic", score: { spiritual: 0, logical: 3, emotional: 0 } },
+          { text: "Creativity", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Both equally", score: { spiritual: 1, logical: 2, emotional: 0 } },
+          { text: "Depends on the problem", score: { spiritual: 2, logical: 0, emotional: 1 } }
+        ]
+      },
+      {
+        question: "Are you open to new ideas and perspectives?",
+        options: [
+          { text: "Always", score: { spiritual: 0, logical: 3, emotional: 0 } },
+          { text: "Often", score: { spiritual: 1, logical: 2, emotional: 0 } },
+          { text: "Sometimes", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Rarely", score: { spiritual: 2, logical: 0, emotional: 1 } }
+        ]
+      },
+      {
+        question: "Do you prefer structured plans over spontaneous actions?",
+        options: [
+          { text: "Definitely", score: { spiritual: 0, logical: 3, emotional: 0 } },
+          { text: "Mostly", score: { spiritual: 1, logical: 2, emotional: 0 } },
+          { text: "Sometimes", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Not at all", score: { spiritual: 2, logical: 0, emotional: 1 } }
+        ]
+      },
+      {
+        question: "How often do you analyze situations before acting?",
+        options: [
+          { text: "Always", score: { spiritual: 0, logical: 3, emotional: 0 } },
+          { text: "Often", score: { spiritual: 1, logical: 2, emotional: 0 } },
+          { text: "Sometimes", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Rarely", score: { spiritual: 2, logical: 0, emotional: 1 } }
+        ]
+      },
+      {
+        question: "Do you enjoy learning about science and technology?",
+        options: [
+          { text: "Very much", score: { spiritual: 0, logical: 3, emotional: 0 } },
+          { text: "Somewhat", score: { spiritual: 1, logical: 2, emotional: 0 } },
+          { text: "Neutral", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Not really", score: { spiritual: 2, logical: 0, emotional: 1 } }
+        ]
+      },
+      {
+        question: "Do you consider yourself detail-oriented?",
+        options: [
+          { text: "Absolutely", score: { spiritual: 0, logical: 3, emotional: 0 } },
+          { text: "Yes", score: { spiritual: 1, logical: 2, emotional: 0 } },
+          { text: "Somewhat", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Not at all", score: { spiritual: 2, logical: 0, emotional: 1 } }
+        ]
+      },
+      {
+        question: "Do you prefer facts over feelings in debates?",
+        options: [
+          { text: "Always", score: { spiritual: 0, logical: 3, emotional: 0 } },
+          { text: "Often", score: { spiritual: 1, logical: 2, emotional: 0 } },
+          { text: "Sometimes", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Rarely", score: { spiritual: 2, logical: 0, emotional: 1 } }
+        ]
+      },
+      {
+        question: "How important is critical thinking to you?",
+        options: [
+          { text: "Extremely important", score: { spiritual: 0, logical: 3, emotional: 0 } },
+          { text: "Important", score: { spiritual: 1, logical: 2, emotional: 0 } },
+          { text: "Somewhat important", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Not important", score: { spiritual: 2, logical: 0, emotional: 1 } }
+        ]
+      },
+      {
+        question: "Do you enjoy strategy games and puzzles?",
+        options: [
+          { text: "Yes, a lot", score: { spiritual: 0, logical: 3, emotional: 0 } },
+          { text: "Yes", score: { spiritual: 1, logical: 2, emotional: 0 } },
+          { text: "Sometimes", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Not really", score: { spiritual: 2, logical: 0, emotional: 1 } }
+        ]
+      },
+      {
+        question: "Do you rely on data when making decisions?",
+        options: [
+          { text: "Always", score: { spiritual: 0, logical: 3, emotional: 0 } },
+          { text: "Often", score: { spiritual: 1, logical: 2, emotional: 0 } },
+          { text: "Sometimes", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Rarely", score: { spiritual: 2, logical: 0, emotional: 1 } }
+        ]
+      },
+      {
+        question: "How do you balance analysis and intuition?",
+        options: [
+          { text: "I rely on logic more", score: { spiritual: 0, logical: 3, emotional: 0 } },
+          { text: "I trust my intuition", score: { spiritual: 1, logical: 1, emotional: 2 } },
+          { text: "I balance both equally", score: { spiritual: 1, logical: 2, emotional: 1 } },
+          { text: "I'm not sure", score: { spiritual: 2, logical: 0, emotional: 1 } }
+        ]
+      },
+      {
+        question: "Do you prefer clear rules over ambiguity?",
+        options: [
+          { text: "Absolutely", score: { spiritual: 0, logical: 3, emotional: 0 } },
+          { text: "Mostly", score: { spiritual: 1, logical: 2, emotional: 0 } },
+          { text: "Sometimes", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Not at all", score: { spiritual: 2, logical: 0, emotional: 1 } }
+        ]
+      },
+      {
+        question: "Do you often plan your day meticulously?",
+        options: [
+          { text: "Yes, always", score: { spiritual: 0, logical: 3, emotional: 0 } },
+          { text: "Often", score: { spiritual: 1, logical: 2, emotional: 0 } },
+          { text: "Sometimes", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Rarely", score: { spiritual: 2, logical: 0, emotional: 1 } }
+        ]
+      },
+      // Emotional Questions (41–60)
+      {
+        question: "Do you feel your emotions guide you in life?",
+        options: [
+          { text: "Yes, completely", score: { spiritual: 0, logical: 0, emotional: 3 } },
+          { text: "Partially", score: { spiritual: 1, logical: 0, emotional: 2 } },
+          { text: "Rarely", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Not at all", score: { spiritual: 2, logical: 1, emotional: 0 } }
+        ]
+      },
+      {
+        question: "How often do you express your feelings openly?",
+        options: [
+          { text: "Always", score: { spiritual: 0, logical: 0, emotional: 3 } },
+          { text: "Often", score: { spiritual: 1, logical: 0, emotional: 2 } },
+          { text: "Sometimes", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Never", score: { spiritual: 2, logical: 1, emotional: 0 } }
+        ]
+      },
+      {
+        question: "Do you feel empathy for others deeply?",
+        options: [
+          { text: "Absolutely", score: { spiritual: 0, logical: 0, emotional: 3 } },
+          { text: "Mostly", score: { spiritual: 1, logical: 0, emotional: 2 } },
+          { text: "Somewhat", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Not really", score: { spiritual: 2, logical: 1, emotional: 0 } }
+        ]
+      },
+      {
+        question: "When you are stressed, do you seek emotional support?",
+        options: [
+          { text: "Always", score: { spiritual: 0, logical: 0, emotional: 3 } },
+          { text: "Sometimes", score: { spiritual: 1, logical: 0, emotional: 2 } },
+          { text: "Rarely", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Never", score: { spiritual: 2, logical: 1, emotional: 0 } }
+        ]
+      },
+      {
+        question: "How important is emotional connection in your relationships?",
+        options: [
+          { text: "Extremely important", score: { spiritual: 0, logical: 0, emotional: 3 } },
+          { text: "Important", score: { spiritual: 1, logical: 0, emotional: 2 } },
+          { text: "Somewhat important", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Not important", score: { spiritual: 2, logical: 1, emotional: 0 } }
+        ]
+      },
+      {
+        question: "Do you tend to wear your heart on your sleeve?",
+        options: [
+          { text: "Yes, always", score: { spiritual: 0, logical: 0, emotional: 3 } },
+          { text: "Often", score: { spiritual: 1, logical: 0, emotional: 2 } },
+          { text: "Sometimes", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Rarely", score: { spiritual: 2, logical: 1, emotional: 0 } }
+        ]
+      },
+      {
+        question: "How sensitive are you to the moods of others?",
+        options: [
+          { text: "Very sensitive", score: { spiritual: 0, logical: 0, emotional: 3 } },
+          { text: "Somewhat sensitive", score: { spiritual: 1, logical: 0, emotional: 2 } },
+          { text: "Neutral", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Not sensitive", score: { spiritual: 2, logical: 1, emotional: 0 } }
+        ]
+      },
+      {
+        question: "Do you find it easy to cry during emotional moments?",
+        options: [
+          { text: "Very easy", score: { spiritual: 0, logical: 0, emotional: 3 } },
+          { text: "Somewhat easy", score: { spiritual: 1, logical: 0, emotional: 2 } },
+          { text: "Neutral", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Not at all", score: { spiritual: 2, logical: 1, emotional: 0 } }
+        ]
+      },
+      {
+        question: "Do you often feel overwhelmed by your feelings?",
+        options: [
+          { text: "Yes, frequently", score: { spiritual: 0, logical: 0, emotional: 3 } },
+          { text: "Sometimes", score: { spiritual: 1, logical: 0, emotional: 2 } },
+          { text: "Rarely", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Never", score: { spiritual: 2, logical: 1, emotional: 0 } }
+        ]
+      },
+      {
+        question: "How much do you value authenticity in emotions?",
+        options: [
+          { text: "Very much", score: { spiritual: 0, logical: 0, emotional: 3 } },
+          { text: "Quite a bit", score: { spiritual: 1, logical: 0, emotional: 2 } },
+          { text: "Somewhat", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Not really", score: { spiritual: 2, logical: 1, emotional: 0 } }
+        ]
+      },
+      {
+        question: "Do you trust your gut feelings?",
+        options: [
+          { text: "Absolutely", score: { spiritual: 0, logical: 0, emotional: 3 } },
+          { text: "Mostly", score: { spiritual: 1, logical: 0, emotional: 2 } },
+          { text: "Sometimes", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Not much", score: { spiritual: 2, logical: 1, emotional: 0 } }
+        ]
+      },
+      {
+        question: "How deeply do you feel joy and sorrow?",
+        options: [
+          { text: "Very deeply", score: { spiritual: 0, logical: 0, emotional: 3 } },
+          { text: "Moderately", score: { spiritual: 1, logical: 0, emotional: 2 } },
+          { text: "Somewhat", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Not much", score: { spiritual: 2, logical: 1, emotional: 0 } }
+        ]
+      },
+      {
+        question: "Are your decisions often influenced by your emotions?",
+        options: [
+          { text: "Always", score: { spiritual: 0, logical: 0, emotional: 3 } },
+          { text: "Often", score: { spiritual: 1, logical: 0, emotional: 2 } },
+          { text: "Sometimes", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Rarely", score: { spiritual: 2, logical: 1, emotional: 0 } }
+        ]
+      },
+      {
+        question: "Do you find comfort in sharing your feelings with others?",
+        options: [
+          { text: "Yes, always", score: { spiritual: 0, logical: 0, emotional: 3 } },
+          { text: "Often", score: { spiritual: 1, logical: 0, emotional: 2 } },
+          { text: "Sometimes", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Rarely", score: { spiritual: 2, logical: 1, emotional: 0 } }
+        ]
+      },
+      {
+        question: "How important is vulnerability to you?",
+        options: [
+          { text: "Very important", score: { spiritual: 0, logical: 0, emotional: 3 } },
+          { text: "Important", score: { spiritual: 1, logical: 0, emotional: 2 } },
+          { text: "Somewhat", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Not important", score: { spiritual: 2, logical: 1, emotional: 0 } }
+        ]
+      },
+      {
+        question: "Do you feel a strong emotional connection with art or music?",
+        options: [
+          { text: "Absolutely", score: { spiritual: 0, logical: 0, emotional: 3 } },
+          { text: "Often", score: { spiritual: 1, logical: 0, emotional: 2 } },
+          { text: "Sometimes", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Rarely", score: { spiritual: 2, logical: 1, emotional: 0 } }
+        ]
+      },
+      {
+        question: "Are you attuned to the emotional undercurrents in conversations?",
+        options: [
+          { text: "Very attuned", score: { spiritual: 0, logical: 0, emotional: 3 } },
+          { text: "Somewhat attuned", score: { spiritual: 1, logical: 0, emotional: 2 } },
+          { text: "Neutral", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Not attuned", score: { spiritual: 2, logical: 1, emotional: 0 } }
+        ]
+      },
+      {
+        question: "Do you prefer heartfelt expressions over rational arguments?",
+        options: [
+          { text: "Definitely", score: { spiritual: 0, logical: 0, emotional: 3 } },
+          { text: "Often", score: { spiritual: 1, logical: 0, emotional: 2 } },
+          { text: "Sometimes", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Not really", score: { spiritual: 2, logical: 1, emotional: 0 } }
+        ]
+      },
+      {
+        question: "Do you value emotional honesty in yourself and others?",
+        options: [
+          { text: "Absolutely", score: { spiritual: 0, logical: 0, emotional: 3 } },
+          { text: "Yes", score: { spiritual: 1, logical: 0, emotional: 2 } },
+          { text: "Somewhat", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Not much", score: { spiritual: 2, logical: 1, emotional: 0 } }
+        ]
+      },
+      {
+        question: "How often do you let your emotions guide your choices?",
+        options: [
+          { text: "Very often", score: { spiritual: 0, logical: 0, emotional: 3 } },
+          { text: "Sometimes", score: { spiritual: 1, logical: 0, emotional: 2 } },
+          { text: "Rarely", score: { spiritual: 1, logical: 1, emotional: 1 } },
+          { text: "Never", score: { spiritual: 2, logical: 1, emotional: 0 } }
+        ]
+      }
+    ];
+
+    /***********************
+     * Final Suggestions
+     ***********************/
+    const spiritualSuggestions = [
+      "You are deeply spiritual! Embrace meditation and mindfulness to nurture your soul.",
+      "Your spiritual energy is a guiding light—explore ancient wisdom and let your inner self shine."
+    ];
+    const logicalSuggestions = [
+      "Your analytical mind is your strength. Trust your reasoning and continue to seek knowledge.",
+      "Logic is your superpower. Keep challenging yourself with puzzles and innovative ideas."
+    ];
+    const emotionalSuggestions = [
+      "Your heart leads you. Cherish your emotional depth and let your feelings guide your journey.",
+      "Your emotional insight is remarkable—embrace your vulnerability and connect deeply with others."
+    ];
+    const balancedSuggestions = [
+      "You possess a unique blend of spirituality, logic, and emotion. Embrace every facet of who you are.",
+      "Your balanced nature makes you adaptable and insightful—continue exploring every aspect of your personality."
+    ];
+
+    /***********************
+     * Quiz Logic
+     ***********************/
+    // Pick 10 random questions from the 60-question dataset.
+    function pickRandomQuestions() {
+      const shuffled = questionsDataset.sort(() => 0.5 - Math.random());
+      return shuffled.slice(0, 10);
+    }
+    let selectedQuestions = pickRandomQuestions();
+
+    // Render the quiz questions
+    function renderQuestions() {
+      const container = document.getElementById("questionsContainer");
+      container.innerHTML = "";
+      selectedQuestions.forEach((q, index) => {
+        const qDiv = document.createElement("div");
+        qDiv.className = "question-block";
+        qDiv.innerHTML = `<p class="question-text">${index + 1}. ${q.question}</p>`;
+        q.options.forEach((option, oIndex) => {
+          const optionId = `q${index}_o${oIndex}`;
+          const radioHtml = `
+            <div class="option">
+              <input type="radio" name="question${index}" id="${optionId}" value="${oIndex}" required>
+              <label for="${optionId}">${option.text}</label>
+            </div>
+          `;
+          qDiv.innerHTML += radioHtml;
+        });
+        container.appendChild(qDiv);
+      });
+    }
+    renderQuestions();
+
+    // Handle quiz form submission
+    document.getElementById("quizForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      let totalScore = { spiritual: 0, logical: 0, emotional: 0 };
+      selectedQuestions.forEach((q, index) => {
+        const selectedOptionIndex = formData.get(`question${index}`);
+        const option = q.options[selectedOptionIndex];
+        totalScore.spiritual += option.score.spiritual;
+        totalScore.logical += option.score.logical;
+        totalScore.emotional += option.score.emotional;
+      });
+      // Determine which category is highest
+      const maxScore = Math.max(totalScore.spiritual, totalScore.logical, totalScore.emotional);
+      let maxCategory = "";
+      if (totalScore.spiritual === maxScore && totalScore.spiritual >= totalScore.logical && totalScore.spiritual >= totalScore.emotional) {
+        maxCategory = "spiritual";
+      } else if (totalScore.logical === maxScore && totalScore.logical >= totalScore.spiritual && totalScore.logical >= totalScore.emotional) {
+        maxCategory = "logical";
+      } else if (totalScore.emotional === maxScore && totalScore.emotional >= totalScore.spiritual && totalScore.emotional >= totalScore.logical) {
+        maxCategory = "emotional";
+      } else {
+        maxCategory = "balanced";
+      }
+
+      let finalSuggestion = "";
+      if (maxCategory === "spiritual") {
+        finalSuggestion = spiritualSuggestions[Math.floor(Math.random() * spiritualSuggestions.length)];
+      } else if (maxCategory === "logical") {
+        finalSuggestion = logicalSuggestions[Math.floor(Math.random() * logicalSuggestions.length)];
+      } else if (maxCategory === "emotional") {
+        finalSuggestion = emotionalSuggestions[Math.floor(Math.random() * emotionalSuggestions.length)];
+      } else {
+        finalSuggestion = balancedSuggestions[Math.floor(Math.random() * balancedSuggestions.length)];
+      }
+
+      document.getElementById("quizResult").style.display = "block";
+      document.getElementById("resultText").innerText = finalSuggestion;
+      document.getElementById("quizForm").style.display = "none";
+    });
+
+    // Restart quiz functionality
+    document.getElementById("restartBtn").addEventListener("click", function() {
+      selectedQuestions = pickRandomQuestions();
+      renderQuestions();
+      document.getElementById("quizResult").style.display = "none";
+      document.getElementById("quizForm").style.display = "block";
+    });
+
+    // Theme toggle functionality
+    const themeToggleInput = document.querySelector("#theme-toggle input");
+    themeToggleInput.addEventListener("change", function() {
+      document.body.setAttribute("data-theme", this.checked ? "dark" : "light");
+    });
+  </script>
+</body>
+</html>
