@@ -99,7 +99,6 @@
 /* Panel 2 */
 
 .panel2{
-  background-color: rgb(232, 232, 232);
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -111,7 +110,7 @@
   justify-content: center;
   grid-gap: 5px;
   height: 100%;
-  padding: 5px;
+  margin-top: 5px;
 }
 
 
@@ -170,29 +169,59 @@
 /* Explore Future */
 
 .explore_future {
-  background-color: var(--secondary-color); /* Use a primary color for the background */
-  color: var(--text-color-2); /* Use a contrasting text color */
+  color: var(--text-color);
+  font-weight: 700;
   padding: 20px;
   text-align: center;
-  border-radius: 10px; /* Add a rounded corner effect */
-  box-shadow: 0 0 10px rgba(0,0,0,0.2); /* Add a subtle shadow */
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+
+  /* Background Image Properties */
+  background-image: url('../assets/images/bg1.jpg'); /* Path to your image */
+  background-size: cover; /* Cover the entire area, maintaining aspect ratio */
+  background-position: center; /* Center the image within the container */
+  background-repeat: no-repeat;
+  position: relative; /* Required for the overlay effect */
+  overflow: hidden; /* Clip the pseudo-element if it overflows */
+}
+
+
+.explore_future::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Adjust the alpha value for brightness */
+  z-index: 1; /* Ensure it's above the background image but below the text */
+}
+
+/* Optional: Ensure text is above the overlay */
+.explore_future > * {
+  position: relative;
+  z-index: 2;
 }
 
 .explore_future p {
-  font-size: 18px;
+  font-size: 15px;
   margin-bottom: 20px;
 }
 
 .explore-btn {
-  background-color: var(--primary-color); /* Use a secondary color for the button */
-  color: var(--text-color);
-  padding: 10px 20px;
+  background-color: var(--secondary-color); /* Use a secondary color for the button */
+  color: var(--text-color-2);
+  padding: 5px 10px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   text-decoration: none;
+  transition: all 0.3s ease; /* Add a smooth transition */
+  
+  
 }
 
 .explore-btn:hover {
   background-color: var(--accent-color); /* Change to an accent color on hover */
+  color: var(--text-color);
 }
