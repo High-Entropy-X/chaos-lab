@@ -6,10 +6,11 @@
   padding: 10px;
   align-items: center;
   justify-content: center;
+  color: var(--text-color);
 }
 
 .header_info{
-  color: var(--text-color-2);
+  color: var(--text-color);
   margin: auto;
   align-items: center;
   text-align: center;
@@ -26,6 +27,26 @@
   justify-content: center;
   height: 100%;
 }
+
+
+/* Footer */
+
+.footer {
+  background-color: #f0f0f0; /* Optional: Background color for the footer */
+  text-align: center;
+  padding: 10px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  font-size: 0.8em; /* Smaller font size */
+}
+
+.heart {
+  color: red; /* Make the heart red */
+}
+
+
 /* Quick Links panel ...  */
 .quick-links-panel {
   top: 0;
