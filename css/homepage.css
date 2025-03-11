@@ -1,251 +1,177 @@
-/* Header Styles */
-.header {
-  background-color: var(--header-bg);
-  padding: 1rem 2rem;
-  border-bottom: 1px solid #ccc;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-}
-
-.header-content {
+.header{
+  background-color: var( --primary-color);
   display: flex;
-  justify-content: space-between;
+  font-weight: 700;
+  color: var(--text -color);
+  padding: 10px;
   align-items: center;
+  justify-content: center;
 }
 
-.header-title h1 {
-  font-size: 1.5rem;
+.header_info{
+  color: var(--text-color-2);
+  margin: auto;
+  align-items: center;
+  text-align: center;
+  font-size: 13px;
+  margin-top: 5px;
 }
 
-/* Theme Toggle Switch */
-.theme-toggle {
-  position: relative;
-  display: inline-block;
-  width: 50px;
-  height: 28px;
-  cursor: pointer;
+.col1{
+  width: 98%;
+  display: grid;
+  grid-template-columns: 20% 80%;
+  grid-gap: 10px;
+  padding: 10px;
+  justify-content: center;
+  height: 100%;
 }
-.theme-toggle input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-.slider {
-  position: absolute;
+/* Quick Links panel ...  */
+.quick-links-panel {
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  border-radius: 28px;
-  transition: 0.4s;
-}
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 22px;
-  width: 22px;
-  left: 3px;
-  bottom: 3px;
-  background-color: white;
-  border-radius: 50%;
-  transition: 0.4s;
-}
-.theme-toggle input:checked + .slider {
-  background-color: var(--accent-color);
-}
-.theme-toggle input:checked + .slider:before {
-  transform: translateX(22px);
-}
-
-/* Flash Games Section */
-.flash-games-section {
-  padding: 1rem 2rem;
-}
-
-.flash-games-section h2 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-  color: var(--accent-color);
-}
-
-.flash-games-container {
-  overflow-x: auto;
-  padding-bottom: 10px;
-}
-
-.flash-games-strip {
+  background-color: var(--primary-color); /* Teal background */
+  color: white;
+  padding: 5px;
+  padding-bottom: 0px;
+  align-items: center;
+  align-items: center;
+  justify-content: center;
   display: flex;
-  gap: 1rem;
-}
-
-.flash-game-card {
-  flex: 0 0 auto;
-  width: 100px;
-  text-align: center;
-  text-decoration: none;
-  color: var(--text-color);
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 0.5rem;
-  background-color: var(--header-bg);
-  transition: transform 0.2s;
-}
-
-.flash-game-card:hover {
-  transform: translateY(-5px);
-}
-
-.flash-game-card img {
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 4px;
-  margin-bottom: 0.5rem;
-}
-
-.flash-game-card span {
-  display: block;
-  font-size: 0.9rem;
-}
-
-.see-more-container {
-  text-align: right;
-  margin-top: 0.5rem;
-}
-
-.btn-see-more {
-  display: inline-block;
-  padding: 0.5rem 1rem;
-  background-color: var(--accent-color);
-  color: #fff;
-  text-decoration: none;
-  border-radius: 4px;
-  font-size: 0.9rem;
-  transition: background-color 0.3s;
-}
-.btn-see-more:hover {
-  background-color: darkred;
-}
-
-/* Confession Showcase Section */
-.confession-showcase {
-  padding: 1rem 2rem;
-  text-align: center;
-  border-top: 1px solid #ccc;
-  margin-top: 2rem;
-}
-.confession-showcase h2 {
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
-  color: var(--accent-color);
-}
-.confession-showcase p {
-  font-size: 1rem;
-  margin-bottom: 1rem;
-}
-.btn-confess {
-  padding: 0.5rem 1rem;
-  background-color: var(--accent-color);
-  color: #fff;
-  text-decoration: none;
-  border-radius: 4px;
-  transition: background-color 0.3s;
-}
-.btn-confess:hover {
-  background-color: darkred;
-}
-
-/* Extra Section (Guess Your Future) */
-.extra-section {
-  text-align: center;
-  padding: 2rem;
-}
-.btn-quiz {
-  display: inline-block;
-  padding: 0.75rem 1.5rem;
-  background-color: var(--accent-color);
-  color: #fff;
-  text-decoration: none;
-  border-radius: 8px;
-  transition: background-color 0.3s;
-  font-size: 1.1rem;
-  margin: 2rem auto;
-}
-.btn-quiz:hover {
-  background-color: darkred;
-}
-
-/* Quiz Preview Section */
-.quiz-preview-section {
-  text-align: center;
-  padding: 2rem;
-  border: 1px solid #ddd;
-  margin: 2rem auto;
-  max-width: 800px;
-  border-radius: 8px;
-  background-color: var(--header-bg);
-}
-.iframe-container {
-  width: 100%;
-  height: 400px;
-  margin: 1rem 0;
-  border: 2px solid var(--accent-color);
-  border-radius: 8px;
-  overflow: hidden;
-}
-.iframe-container iframe {
-  width: 100%;
+  border-radius: 5px;
+  font-weight:600;
   height: 100%;
-  border: none;
 }
 
-/* Today in History Widget */
-.today-history-widget {
-  position: fixed;
-  top: 20%;
-  right: 2%;
-  width: 280px;
-  background-color: var(--header-bg);
-  padding: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
+.quick-links-panel ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
-.today-history-widget h3 {
-  font-size: 1.2rem;
-  margin-bottom: 0.5rem;
-  color: var(--accent-color);
+
+.quick-links-panel li {
+  display: flex;
+  margin-right: 20px;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  padding: 2px;
 }
-.today-history-widget #historyEvent {
-  font-size: 0.95rem;
-  line-height: 1.4;
+
+.quick-links-panel a {
+  text-decoration: none;
+  color: inherit;
+  width: 100%;
+  padding: 5px;
+  border-bottom: 1px solid white;
+  outline: none;
+}
+
+.quick-links-panel a:hover {
+  background-color: var(--secondary-color);
+  color: var(--text-color-2)
+}
+
+/* Panel 2 */
+
+.panel2{
+  background-color: rgb(232, 232, 232);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.panel2-1{
+  display: grid;
+  grid-template-columns: 20% 40% 38%;
+  justify-content: center;
+  grid-gap: 5px;
+  height: 100%;
+  padding: 5px;
+}
+
+
+/* Scrollling Text */
+.ticker-wrap {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--primary-color);
+  padding: 10px;
+}
+
+.ticker {
+  display: inline-block;
+  white-space: nowrap;
+  padding-left: 0; /* Start from the left */
+  animation: ticker 80s linear infinite;
+}
+
+.ticker span {
   color: var(--text-color);
 }
-.btn-reload {
-  margin-top: 0.5rem;
-  padding: 0.3rem 0.8rem;
-  background-color: var(--accent-color);
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.8rem;
-  transition: background-color 0.3s;
-}
-.btn-reload:hover {
-  background-color: darkred;
+
+.highlight {
+  color: var(--secondary-color) !important; 
+  font-weight: bold;
 }
 
-/* Responsive Adjustments */
-@media (max-width: 600px) {
-  .flash-game-card {
-    width: 80px;
+.ticker a {
+  text-decoration: none;
+  color: inherit;
+}
+
+@keyframes ticker {
+  0% {
+      transform: translateX(0);
   }
-  .flash-game-card img {
-    width: 60px;
-    height: 60px;
+  100% {
+      transform: translateX(-100%);
   }
+}
+
+.ticker-wrap:hover .ticker {
+  animation-play-state: paused; /* Pause animation on hover */
+}
+
+/* Expore future - (First panel) and other elements */
+.element{
+  background-color: var(--secondary-color);
+  background-color: azure;
+  padding: 5px;
+  margin: 2px;
+  color: var(--text-color-2);
+  border-radius: 5px;
+}
+
+/* Explore Future */
+
+.explore_future {
+  background-color: var(--secondary-color); /* Use a primary color for the background */
+  color: var(--text-color-2); /* Use a contrasting text color */
+  padding: 20px;
+  text-align: center;
+  border-radius: 10px; /* Add a rounded corner effect */
+  box-shadow: 0 0 10px rgba(0,0,0,0.2); /* Add a subtle shadow */
+}
+
+.explore_future p {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.explore-btn {
+  background-color: var(--primary-color); /* Use a secondary color for the button */
+  color: var(--text-color);
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.explore-btn:hover {
+  background-color: var(--accent-color); /* Change to an accent color on hover */
 }
